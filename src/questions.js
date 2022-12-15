@@ -75,9 +75,11 @@ const AddEmployeeQues =[
         message: "Please enter the Employee's last name..",
     },
     {
-        type: "input",
+        type: "list",
         name: "role_id",
         message: "Please enter the role for the employee..",
+        choices:[
+        ],
     },
     {
         type: "list",

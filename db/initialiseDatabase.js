@@ -8,8 +8,10 @@ class initialiseDatabase {
 
     validate() {
 
+        console.log(this.data);
+
         const { host, user, password, database} = this.data;
-        if ( !host || !user || !password || database )
+        if ( !host || !user || !database )
         throw new Error('Database login details are invalid');
 
         return;
