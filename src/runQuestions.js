@@ -1,14 +1,23 @@
 // requiring the inquirer module in order to run the questions in the terminal
 const inquirer = require('inquirer');
-
+const staffDatabase = require('../db/staffDatabase')
 // reuiure the questions.js file
 const  {MenuQuestions, AddDepartmentQues, AddRoleQues, AddEmployeeQues, UpdateEmployeeQues} = require('./questions');
 
+
+const db = new staffDatabase(
+    {
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'employee.db'  
+    }
+)
 // const Managers = [];
 // const Interns = [];
 // const Engineers = [];
 
-// this function is called from the index.js file and runs questions required to populate the html team page
+// this function is called from the index.js file and runs questions required t
 const runMenuQuestions = () => {
     // inquirer prompt
     inquirer
@@ -56,7 +65,7 @@ const runMenuQuestions = () => {
 };
 // the follwoing functions propmt the questions relevent to each employee and then takes the responses and adds them to the relevant array for export
 
-const runManagerQuestions = () => {
+const viewDepartments = () => {
     inquirer
     .prompt(Questions.ManagerQues)
     .then((answers) => {
@@ -67,7 +76,7 @@ const runManagerQuestions = () => {
     })
 };
 
-const runEngineerQuestions = () => {
+const viewRoles = () => {
     inquirer
     .prompt(Questions.EngineerQues)
     .then((answers) => {
@@ -78,7 +87,7 @@ const runEngineerQuestions = () => {
     })
 };
 
-const runInternQuestions = () => {
+const viewEmployees = () => {
     inquirer
     .prompt(Questions.InternQues)
     .then((answers) => {
@@ -87,6 +96,23 @@ const runInternQuestions = () => {
         console.log(Interns);
         runStartQuestions();
     })
+};
+
+const addDepartment = () => {
+
+};
+
+const addRole = () => {
+    
+};
+
+const addEmployee = () => {
+    
+};
+
+const updateEmployee = (results) => {
+    console.log (`The staff member, ${results}, has been updated the staff database`);
 }
+
 // exports the function to be able to call it from the index.js file
 module.exports = runMenuQuestions;
