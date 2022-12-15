@@ -1,5 +1,7 @@
 // requiring the inquirer module in order to run the questions in the terminal
+const { connect } = require('http2');
 const inquirer = require('inquirer');
+const { brotliDecompress } = require('zlib');
 const staffDatabase = require('../db/staffDatabase')
 // reuiure the questions.js file
 const  {MenuQuestions, AddDepartmentQues, AddRoleQues, AddEmployeeQues, UpdateEmployeeQues} = require('./questions');
@@ -10,12 +12,14 @@ const db = new staffDatabase(
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'employee.db'  
+        database: 'employee_db'  
     }
 )
 // const Managers = [];
 // const Interns = [];
 // const Engineers = [];
+
+db.connect();
 
 // this function is called from the index.js file and runs questions required t
 const runMenuQuestions = () => {
@@ -66,53 +70,181 @@ const runMenuQuestions = () => {
 // the follwoing functions propmt the questions relevent to each employee and then takes the responses and adds them to the relevant array for export
 
 const viewDepartments = () => {
-    inquirer
-    .prompt(Questions.ManagerQues)
-    .then((answers) => {
-        const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber)
-        Managers.push(manager);
-        console.log(Managers);
-        runStartQuestions();
+    
+    db.showDepartments()
+    .then((results) => {
+        
+        console.table(results);
+
+        runMenuQuestions();
     })
 };
 
 const viewRoles = () => {
-    inquirer
-    .prompt(Questions.EngineerQues)
-    .then((answers) => {
-        const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github)
-        Engineers.push(engineer);
-        console.log(Engineers);
-        runStartQuestions();
+   
+    db.showRoles()
+    .then((results) => {
+        
+        console.table(results);
+
+        runMenuQuestions();
     })
 };
 
 const viewEmployees = () => {
-    inquirer
-    .prompt(Questions.InternQues)
-    .then((answers) => {
-        const intern = new Intern(answers.name, answers.id, answers.email, answers.school)
-        Interns.push(intern);
-        console.log(Interns);
-        runStartQuestions();
+   
+    db.showEmployees()
+    .then((results) => {
+        
+        console.table(results);
+
+        runMenuQuestions();
     })
 };
 
 const addDepartment = () => {
 
+    inquirer
+
+    .prompt(AddDepartmentQues)
+    .then((answer) => {
+
+        db.add_a_Department(answer)
+        .then((results) => {
+
+            console.log('\n', results, '\n');
+
+            runMenuQuestions();
+        })
+    })
 };
 
 const addRole = () => {
-    
+
+    db.showDepartments()
+    .then((results) => {
+        
+        const deptQues = AddRoleQues[2];
+        results.forEach((department) => {
+            
+            deptQues.choices.push(
+                {
+                    name: department.name,
+                    value: department.id,
+                }
+            )
+        });
+
+        inquirer
+
+        .prompt(AddRoleQues)
+        .then((answer) => {
+
+            db.add_a_Role(answer)
+            .then((results) => {
+
+                console.log('\n', results, '\n');
+
+                runMenuQuestions();
+            });
+        })
+    })
 };
 
 const addEmployee = () => {
+
+    db.showRoles()
+    .then((results) => {
+
+        const roleQues = AddEmployeeQues[2];
+        results.forEach((role) => {
+
+            const roleSummary = `${role.title} (${role.department_name}: ${role.salary})`;
+            roleQues.choices.push(
+                { 
+                    name: roleSummary,
+                    value: role.id
+                });
+        });
+
+        db.showEmployees()
+        .then((results) => {
+
+            const managerQues = AddEmployeeQues[3];
+            results.forEach((employee) => {
+                managerQues.choices.push(
+                    {
+                        name: employee.staff_name,
+                        value: employee.id
+                    }
+                )
+            });
+
+            managerQues.choices.push({
+                name: 'None',
+                value: null
+            });
+
+            inquirer
+
+            .prompt(AddEmployeeQues)
+            .then((answer) => {
+                db.add_an_Employee(answer)
+                .then((results) => {
+                    console.log('\n', results, '\n');
+
+                    runMenuQuestions();
+                });
+            })
+        });
+    });
     
 };
 
 const updateEmployee = (results) => {
+
+    db.showEmployees()
+    .then((results) => {
+
+        const empQues = UpdateEmployeeQues[0];
+        results.forEach((employee) => {
+            empQues.choices.push(
+                {
+                    name: employee.staff_name,
+                    value: employee.id
+                }
+            );   
+        });
+
+        db.showRoles()
+        .then((results) => {
+            const roleQues = UpdateEmployeeQues[1];
+            results.forEach((role) => {
+                roleQues.choices.push(
+                    {
+                        name: role.title,
+                        value: role.id
+                    }
+                );
+            });
+
+            inquirer
+
+            .prompt(UpdateEmployeeQues)
+            .then((answer) => {
+                db.update_an_Employee(answer)
+                .then((results) => {
+                    console.log('\n', results, '\n');
+
+                    runMenuQuestions();
+                });
+            });
+        });
+    });
+
     console.log (`The staff member, ${results}, has been updated the staff database`);
-}
+
+};
 
 // exports the function to be able to call it from the index.js file
 module.exports = runMenuQuestions;
