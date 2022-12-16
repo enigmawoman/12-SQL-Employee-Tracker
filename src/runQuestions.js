@@ -1,10 +1,8 @@
 // requiring the inquirer module in order to run the questions in the terminal
-const { connect } = require('http2');
 const inquirer = require('inquirer');
-const { brotliDecompress } = require('zlib');
 const staffDatabase = require('../db/staffDatabase')
 // reuiure the questions.js file
-const  {MenuQuestions, AddDepartmentQues, AddRoleQues, AddEmployeeQues, UpdateEmployeeQues} = require('./questions');
+const  {MenuQuestions, AddDepartmentQues, AddRoleQues, AddEmployeeQues, UpdateEmployeeQues, UpdateEmployeeManagerQues} = require('./questions');
 
 
 const db = new staffDatabase(
@@ -23,6 +21,7 @@ db.connect();
 
 // this function is called from the index.js file and runs questions required t
 const runMenuQuestions = () => {
+
     // inquirer prompt
     inquirer
     // asking the initial questions to determine which type of emplpyee you would like to add
@@ -64,6 +63,16 @@ const runMenuQuestions = () => {
         
                 updateEmployee()
                 break;
+
+            case 'update_an_employee_manager':
+    
+            updateEmployeeManager()
+            break;
+
+            case 'delete_an_employee':
+
+            deleteAnEmployee()
+            break;
         }
     })
 };
@@ -235,15 +244,62 @@ const updateEmployee = (results) => {
                 db.update_an_Employee(answer)
                 .then((results) => {
                     console.log('\n', results, '\n');
-
+                    
                     runMenuQuestions();
                 });
             });
         });
     });
 
-    console.log (`The staff member, ${results}, has been updated the staff database`);
+  
 
+};
+const updateEmployeeManager = (results) => {
+
+    db.showEmployees()
+    .then((results) => {
+
+        const empQues = UpdateEmployeeManagerQues[0];
+        results.forEach((employee) => {
+            empQues.choices.push(
+                {
+                    name: employee.staff_name,
+                    value: employee.id
+                }
+            );   
+        });
+
+        db.showEmployees()
+        .then((results) => {
+
+            const managerQues = UpdateEmployeeManagerQues[1];
+            results.forEach((employee) => {
+                managerQues.choices.push(
+                    {
+                        name: employee.staff_name,
+                        value: employee.id
+                    }
+                )
+            });
+
+            managerQues.choices.push({
+                name: 'None',
+                value: null
+            });
+
+            inquirer
+
+            .prompt(UpdateEmployeeManagerQues)
+            .then((answer) => {
+                db.update_Employee_Manager(answer)
+                .then((results) => {
+                    console.log('\n', results, '\n');
+                    
+                    runMenuQuestions();
+                });
+            });
+        });
+    });
 };
 
 // exports the function to be able to call it from the index.js file

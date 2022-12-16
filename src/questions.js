@@ -32,6 +32,10 @@ const MenuQuestions =[
                 name: "update an employee role",
                 value: 'update_an_employee_role',
             },
+            {
+                name: "update an employee manager",
+                value: 'update_an_employee_manager',
+            },
         ]},
 ];
 
@@ -105,5 +109,24 @@ const UpdateEmployeeQues =[
         ],
     },
 ];
+
+const UpdateEmployeeManagerQues =[
+    {
+        type: "list",
+        name: "employee_id",
+        message: "Please choose an employee to update..",
+        choices: [
+        ],
+    },
+    {
+        type: "list",
+        name: "manager_id",
+        message: "Please choose the new manager for the employee..",
+        choices: [
+        ],
+    },
+];
+
+
 // exporting the questions
-module.exports = {MenuQuestions, AddDepartmentQues, AddRoleQues, AddEmployeeQues, UpdateEmployeeQues};
+module.exports = {MenuQuestions, AddDepartmentQues, AddRoleQues, AddEmployeeQues, UpdateEmployeeQues, UpdateEmployeeManagerQues};
