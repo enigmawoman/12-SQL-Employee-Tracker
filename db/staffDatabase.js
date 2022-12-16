@@ -38,7 +38,7 @@ class staffDatabase extends initialiseDatabase {
                 role.title AS job_title,
                 role.salary AS salary,
                 department.name AS department_name,
-                IF(CONCAT(manager.first_name, ' ', manager.last_name) IS NULL, '', CONCAT(manager.first_name, ' ', manager.last_name)) AS employee_name
+                IF(CONCAT(manager.first_name, ' ', manager.last_name) IS NULL, '', CONCAT(manager.first_name, ' ', manager.last_name)) AS manager_name
     
                 FROM employee
                     INNER JOIN role ON employee.role_id = role.id
@@ -116,6 +116,18 @@ class staffDatabase extends initialiseDatabase {
             });
         });
     }
+    update_Employee_Manager(employee) {
+
+        return new Promise((resolve, reject) => {
+            this.db.query(`UPDATE employee SET manager_id=? WHERE id=?`, [employee.role_id, employee.manager_id], (err, results) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(results)
+            });
+        });
+    }
 }
+
 
 module.exports = staffDatabase;
