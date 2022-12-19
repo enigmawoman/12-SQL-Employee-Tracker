@@ -98,12 +98,7 @@ I have fully commented the codefiles, to explain the flow and logic of the code,
 ### Video demonstration.
 
 
-<a href="https://drive.google.com/file/d/1rpxGvoVnJx_d3uiI7cAGyBWBkQAyeVD3/view"><b>Link to FULL VERSION video Demonstration</b></a>
-
-Shortened version embedded below:
-
-
-https://user-images.githubusercontent.com/112570078/205699422-9de47e9c-e5fb-4a9f-8b3d-bffff4329eda.mp4
+<a href="https://drive.google.com/file/d/1xS3HM0w1byVB7qQb6lXXFcCP9tKbyMjJ/view"><b>Link to FULL VERSION video walkthrough</b></a>
 
 
 ## Usage
