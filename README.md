@@ -96,9 +96,9 @@ I have fully commented the codefiles, to explain the flow and logic of the code,
 
 ### Video demonstration.
 
-<a href="https://drive.google.com/file/d/1xS3HM0w1byVB7qQb6lXXFcCP9tKbyMjJ/view"><b>Link to FULL VERSION video walkthrough</b></a>
+<a href="https://drive.google.com/file/d/1xS3HM0w1byVB7qQb6lXXFcCP9tKbyMjJ/view"><b>Link to video walkthrough</b></a>
 
-[Untitled_ Dec 19, 2022 12_07 PM.webm](https://user-images.githubusercontent.com/112570078/208424305-8dac7836-e943-4110-8836-7b6076547069.webm)
+[Embedded Employee Tracker Walkthrough](https://user-images.githubusercontent.com/112570078/208424305-8dac7836-e943-4110-8836-7b6076547069.webm)
 
 
 ## Usage
