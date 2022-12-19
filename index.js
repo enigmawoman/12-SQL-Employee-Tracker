@@ -6,7 +6,8 @@ function init () {
         figlet.text("School \n Staff \n Tracker", function (err, data){
         console.log(data)
         })
-}
 
-runMenuQuestions();
+        runMenuQuestions();
+}
 init();
+
