@@ -1,10 +1,10 @@
-// requiring the inquirer module in order to run the questions in the terminal
+// requiring the npm inquirer module in order to run the questions in the terminal
 const inquirer = require('inquirer');
 const staffDatabase = require('../db/staffDatabase')
-// reuiure the questions.js file
+// require the questions.js file
 const  {MenuQuestions, AddDepartmentQues, AddRoleQues, AddEmployeeQues, UpdateEmployeeQues, UpdateEmployeeManagerQues} = require('./questions');
 
-
+//creating a new instance of the staffDatabase class to add in the login parameters for mySQL
 const db = new staffDatabase(
     {
         host: 'localhost',
@@ -13,18 +13,15 @@ const db = new staffDatabase(
         database: 'employee_db'  
     }
 )
-// const Managers = [];
-// const Interns = [];
-// const Engineers = [];
-
+//connecting to the database
 db.connect();
 
-// this function is called from the index.js file and runs questions required t
+// this function is called from the index.js file and runs questions required to view and update the database
 const runMenuQuestions = () => {
 
     // inquirer prompt
     inquirer
-    // asking the initial questions to determine which type of emplpyee you would like to add
+    // asking the initial questions to determine which task you would like to complete
     .prompt(MenuQuestions)
     .then((answer) => {
         // using a switch statement to determine which function needs to run based on the user input
@@ -68,27 +65,24 @@ const runMenuQuestions = () => {
     
             updateEmployeeManager()
             break;
-
-            case 'delete_an_employee':
-
-            deleteAnEmployee()
-            break;
         }
     })
 };
-// the follwoing functions propmt the questions relevent to each employee and then takes the responses and adds them to the relevant array for export
+// the following functions propmt the database queries to run from the staffDatabase.js file
 
+// will show you a table of the deptpartments
 const viewDepartments = () => {
     
     db.showDepartments()
     .then((results) => {
-        
+        // will display the results in a table
         console.table(results);
 
         runMenuQuestions();
     })
 };
 
+// will show a table of the roles
 const viewRoles = () => {
    
     db.showRoles()
@@ -100,6 +94,7 @@ const viewRoles = () => {
     })
 };
 
+// will show a table of the employees 
 const viewEmployees = () => {
    
     db.showEmployees()
@@ -111,13 +106,14 @@ const viewEmployees = () => {
     })
 };
 
+
 const addDepartment = () => {
 
     inquirer
-
+// runs thr questions need to add a department to the database
     .prompt(AddDepartmentQues)
     .then((answer) => {
-
+// all the departments inc the newly added one will be displayed in a table
         db.add_a_Department(answer)
         .then((results) => {
 
@@ -128,11 +124,13 @@ const addDepartment = () => {
     })
 };
 
+
 const addRole = () => {
 
+    // all the show departments query to get the database results
     db.showDepartments()
     .then((results) => {
-        
+        // then using a forEach, pass each one of the departments into the 3rd question in add role questions and will display them as choices
         const deptQues = AddRoleQues[2];
         results.forEach((department) => {
             
@@ -145,7 +143,7 @@ const addRole = () => {
         });
 
         inquirer
-
+// then run the addRole Questions
         .prompt(AddRoleQues)
         .then((answer) => {
 
@@ -161,9 +159,12 @@ const addRole = () => {
 };
 
 const addEmployee = () => {
+    // all the show roles query to get the database results
 
     db.showRoles()
     .then((results) => {
+       
+        // then using a forEach, pass each one of the roles into the 3rd question in add employee questions and will display them as choices
 
         const roleQues = AddEmployeeQues[2];
         results.forEach((role) => {
@@ -175,9 +176,11 @@ const addEmployee = () => {
                     value: role.id
                 });
         });
+    // all the show employees query to get the database results
 
         db.showEmployees()
         .then((results) => {
+        // then using a forEach, pass each one of the employees into the 4th question in add employee questions and will display them as choices for the managers, as managers are also employess
 
             const managerQues = AddEmployeeQues[3];
             results.forEach((employee) => {
@@ -195,7 +198,7 @@ const addEmployee = () => {
             });
 
             inquirer
-
+// run the add employees questions
             .prompt(AddEmployeeQues)
             .then((answer) => {
                 db.add_an_Employee(answer)
@@ -211,9 +214,10 @@ const addEmployee = () => {
 };
 
 const updateEmployee = (results) => {
-
+    // all the show employees query to get the database results
     db.showEmployees()
     .then((results) => {
+        // then using a forEach, pass each one of the employees into the 1st question in update employee questions and will display them as choices
 
         const empQues = UpdateEmployeeQues[0];
         results.forEach((employee) => {
@@ -224,10 +228,12 @@ const updateEmployee = (results) => {
                 }
             );   
         });
-
-        db.showRoles()
+    // all the show roles query to get the database results
+    db.showRoles()
         .then((results) => {
             const roleQues = UpdateEmployeeQues[1];
+        // then using a forEach, pass each one of the roles into the 2nd question in update employee questions and will display them as choices
+
             results.forEach((role) => {
                 roleQues.choices.push(
                     {
@@ -238,7 +244,7 @@ const updateEmployee = (results) => {
             });
 
             inquirer
-
+// runs the questions for the update employee question
             .prompt(UpdateEmployeeQues)
             .then((answer) => {
                 db.update_an_Employee(answer)
@@ -255,9 +261,10 @@ const updateEmployee = (results) => {
 
 };
 const updateEmployeeManager = (results) => {
-
+    // all the show employees query to get the database results
     db.showEmployees()
     .then((results) => {
+        // then using a forEach, pass each one of the employees into the 1st question in update employee manager questions and will display them as choices
 
         const empQues = UpdateEmployeeManagerQues[0];
         results.forEach((employee) => {
@@ -268,11 +275,11 @@ const updateEmployeeManager = (results) => {
                 }
             );   
         });
-
-        db.showEmployees()
+    // all the show employees query to get the database results
+    db.showEmployees()
         .then((results) => {
-
-            const managerQues = UpdateEmployeeManagerQues[1];
+        // then using a forEach, pass each one of the employees into the 2nd question in update employee manager questions and will display them as choices
+        const managerQues = UpdateEmployeeManagerQues[1];
             results.forEach((employee) => {
                 managerQues.choices.push(
                     {
@@ -288,7 +295,7 @@ const updateEmployeeManager = (results) => {
             });
 
             inquirer
-
+// runs the questions for the update employee manager function
             .prompt(UpdateEmployeeManagerQues)
             .then((answer) => {
                 db.update_Employee_Manager(answer)

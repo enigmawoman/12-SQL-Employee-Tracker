@@ -1,11 +1,13 @@
+// require the npm mysql2 package
 const mysql = require('mysql2');
 
+// create a class to connect to the mysql database
 class initialiseDatabase {
     constructor (data) {
         this.data = data
         this.db = null
     }
-
+// checking to make sure the details entered into the new instance of the class are correct
     validate() {
 
         const { host, user, password, database} = this.data;
@@ -14,7 +16,7 @@ class initialiseDatabase {
 
         return;
     }
-
+// this function runs the automated connection command in the mysql2 package
     connect() {
 
         this.validate();

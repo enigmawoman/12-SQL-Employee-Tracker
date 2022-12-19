@@ -1,3 +1,4 @@
+-- data to be inserted into the tables in the schemea
 INSERT INTO department (name)
 VALUES ("Teaching"),
        ("Support Staff"),
