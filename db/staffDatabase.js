@@ -1,10 +1,12 @@
 const initialiseDatabase = require('./initialiseDatabase');
 
+// new class extends the initalise database class - takes the login info from the base class and adds on the functions below for the database quiries
 class staffDatabase extends initialiseDatabase {
     constructor (data) {
         super (data);
     }
 
+    // this function selects the data for the department table
     showDepartments() {
 
         return new Promise((resolve, reject) => {
@@ -16,10 +18,11 @@ class staffDatabase extends initialiseDatabase {
             })
         })
     }
-
+    // this function selects the data for the role table and uses an inner join as there is a dependancy on the department table 
     showRoles()  {
 
         return new Promise((resolve, reject) => {
+            // using aliases as well for presenting the data to the user
             this.db.query(`SELECT role.id, role.title, role.salary AS salary, department.name AS department_name FROM role INNER JOIN department ON role.department_id = department.id`, (err, results) => {
                 if (err) {
                     reject(err);
@@ -28,7 +31,7 @@ class staffDatabase extends initialiseDatabase {
             })
         })
     }
-
+    // this function selects the data for the employee table and uses 2 inner joins and a left join as there is a dependancy on both the department and role table 
     showEmployees() {
 
         return new Promise((resolve, reject) => {
@@ -53,7 +56,7 @@ class staffDatabase extends initialiseDatabase {
             })
         })
     }
-
+// this function inserts a department into the database
     add_a_Department(department) {
 
         const departmentData = {name: department.department_name}
@@ -67,7 +70,7 @@ class staffDatabase extends initialiseDatabase {
             });
         });
     }
-
+// this function inserts a role into the database
     add_a_Role(role) {
 
         const roleData = {
@@ -85,6 +88,7 @@ class staffDatabase extends initialiseDatabase {
             });
         });
     }
+// this function inserts an employee into the database
 
     add_an_Employee(employee) {
 
@@ -104,10 +108,11 @@ class staffDatabase extends initialiseDatabase {
             });
         });
     }
-
+// updates an employee
     update_an_Employee(employee) {
 
         return new Promise((resolve, reject) => {
+            // updating on the employee where the id matches
             this.db.query(`UPDATE employee SET role_id=? WHERE id=?`, [employee.role_id, employee.employee_id], (err, results) => {
                 if (err) {
                     reject(err);
@@ -116,6 +121,7 @@ class staffDatabase extends initialiseDatabase {
             });
         });
     }
+    //updates an employees manager
     update_Employee_Manager(employee) {
 
         return new Promise((resolve, reject) => {
