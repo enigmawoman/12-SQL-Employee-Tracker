@@ -12,7 +12,7 @@ Build of a CLI database that utilises Node.js, Inquirer, and MySQL.
 * [Installation](#installation)
 * [Testing](#testing)
 * [Using the code](#using-the-code)
-* [The Team Profile Generator](#the-team-profile-generator)
+* [Employee Tracker Database](#employee-tracker-database)
     * [Video Demonstration](#video-demonstration)
 * [Usage](#usage)
 * [License](#license) 
